@@ -39,13 +39,35 @@ end);
 function Tween(info) -- Unsafe code (no checks)
     local TweenInfo = {
         StartTime = tick(),
-        Duration = info.Duration,
+        Duration = info.Duration or 1,
 
         OnChange = info.OnChange, -- function
         OnEnd = info.OnEnd, -- function
 
-        StartValue = info.StartValue,
-        CurrentValue = info.StartValue, -- Maybe dont set manually like this and in the loop? prob don't matter
-        EndValue = info.EndValue,
+        StartValue = info.StartValue or 0,
+        CurrentValue = info.StartValue or 0, -- Maybe dont set manually like this and in the loop? prob don't matter
+        EndValue = info.EndValue or 1,
     }; INSERT(CurrentTweens, TweenInfo); -- Makes it just look a little nicerr
 end; getgenv().Tween = Tween;
+
+return Tween;
+
+-- Example (Tested in baseplate game)
+--[[
+local Baseplate = game.Workspace.Baseplate;
+
+Tween({
+    Duration = 5,
+    StartValue = 0,
+    EndValue = 100,
+
+    OnChange = function(value)
+        Baseplate.Transparency = value / 100;
+    end,
+
+    OnEnd = function()
+        wait(1);
+        Baseplate.Transparency = 0;
+    end,
+});
+--]]
