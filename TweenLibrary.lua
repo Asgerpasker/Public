@@ -54,6 +54,7 @@ return Tween;
 
 -- Example (Tested in baseplate game)
 --[[
+local Tween = loadstring(game:HttpGet("https://raw.githubusercontent.com/Asgerpasker/Public/main/TweenLibrary.lua"))(); -- Don't really need to declare it since it's added to the global env (getgenv)
 local Baseplate = game.Workspace.Baseplate;
 
 Tween({
