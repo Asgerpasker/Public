@@ -53,7 +53,7 @@ return Tween; -- Doesn't really matter, since it's getting added to the global e
 --[[
 -- Example
 
-local Tween = loadstring(game:HttpGet("https://raw.githubusercontent.com/Asgerpasker/Public/main/TweenLibrary.lua"))(); -- Gets added to global exploit env anyway, probably doesn't matter much
+local Tween = loadstring(game:HttpGet("https://raw.githubusercontent.com/Asgerpasker/Public/main/TweenLibrary.lua"))(); -- looks nicer
 local Baseplate = game.Workspace.Baseplate;
 
 Tween({
