@@ -11,7 +11,7 @@ local KeyLibrary = {};
 function KeyLibrary:TapKey(key)
   key = key:upper();
 
-  if key == "MOUSEBUTTON1" then
+  if key == "MOUSEBUTTON1" or key == "M1" then
     VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0);
     RenderStepped:Wait(); -- wait for 1 frame to render or soemthin so it actually registers the key tap
     VirtualInputManager:SendMouseButtonEvent(0, 0, 0, false, game, 0);
@@ -26,6 +26,14 @@ function KeyLibrary:TapKey(key)
       warn("Error with simulating key: "..key);
   end;
 end;
+
+  --[[
+key = keycode[key]
+  if not key then
+  send(e)
+else
+  sendmouse()
+  --]]
 
   -- HoldKey, ReleaseKey
 
