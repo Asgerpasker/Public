@@ -16,7 +16,7 @@ SPAWN(function()
 
         for i,v in pairs(CurrentTweens) do
             local Elapsed = CurrentTime - v.StartTime;
-            v.CurrentValue = v.StartValue + (v.EndValue - v.StartValue) * CLAMP(Elapsed / v.Duration, 0, 1);
+            v.CurrentValue = v.StartValue + (v.EndValue - v.StartValue) * CLAMP(Elapsed / v.Duration, 0, 1); -- v.StartValue * CLAMP(Elapsed / v.Duration, 0, 1)
 
             SPAWN(function() -- eh
                 v.OnChange(v.CurrentValue);
