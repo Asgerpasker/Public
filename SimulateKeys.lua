@@ -37,4 +37,5 @@ else
 
 -- HoldKey, ReleaseKey
 
+getgenv().KeyLibrary = KeyLibrary;
 return KeyLibrary;
