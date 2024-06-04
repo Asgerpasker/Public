@@ -27,6 +27,40 @@ function KeyLibrary:TapKey(key)
 		end;
 	end;
 end;
+
+function KeyLibrary:HoldKey(key)
+	key = key:upper();
+
+	if key == "MOUSEBUTTON1" or key == "M1" then
+		VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0);
+	else
+		local Key = Enum.KeyCode[key];
+
+		if Key then
+			VirtualInputManager:SendKeyEvent(true, Key, false, game);
+		else
+			warn("Error with simulating key: "..key);
+		end;
+	end;
+end;
+
+function KeyLibrary:ReleaseKey(key)
+	key = key:upper();
+
+	if key == "MOUSEBUTTON1" or key == "M1" then
+		VirtualInputManager:SendMouseButtonEvent(0, 0, 0, false, game, 0);
+	else
+		local Key = Enum.KeyCode[key];
+
+		if Key then
+			VirtualInputManager:SendKeyEvent(false, Key, false, game);
+		else
+			warn("Error with simulating key: "..key);
+		end;
+	end;
+end;
+
+
   --[[
 key = keycode[key]
   if not key then
