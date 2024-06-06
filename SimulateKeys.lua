@@ -37,9 +37,8 @@ function KeyLibrary:HoldKey(key)
 		local Key = Enum.KeyCode[key];
 
 		if Key then
-			VirtualInputManager:SendKeyEvent(true, Key, false, game);
-		else
-			warn("Error with simulating key: "..key);
+			keypress(Key);
+			keyrelease(Key);
 		end;
 	end;
 end;
