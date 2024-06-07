@@ -1,40 +1,64 @@
 --[[
-Simple library to simulate the pressing of keys in Roblox.
-Specifically made for Solara, and other level 3 executors, due to their lack of UNC.
-Only supports 1 mouse key (MouseButton1)
+	Simple library to simulate the pressing of keys in Roblox
+	Specifically made for Solara, and other level 3 executors, due to their lack of proper UNC
+	Only supports left mouse button
+
+	---------> ethereon.xyz <---------
 ]]
 
 local VirtualInputManager = game:GetService("VirtualInputManager");
-local RenderStepped = game:GetService("RunService").RenderStepped;
-local KeyLibrary = {};
+local RenderStepped, KeyCode = game:GetService("RunService").RenderStepped, Enum.KeyCode;
+local HasKeyFunctions = typeof(keypress) == "function" and typeof(keyrelease) == "function";
+local KeyLibrary = {
+	_AUTHOR = "Asgerpasker",
+	_BESTTC2HACK = "ethereon.xyz",
+	_LASTUPDATED = "6/7/2024", -- MM/DD/YYYY
+};
+
+function SimulateKey(key, down) -- no add to keylibrary table since this function wasn't made for mongos to use
+	key = key:upper();
+
+	if key == "MOUSEBUTTON1" or key == "M1" then
+		VirtualInputManager:SendMouseButtonEvent(0, 0, 0, down, game, 0);
+
+	elseif HasKeyFunctions then
+		if down then
+			keypress(key);
+		else
+			keyrelease(key);
+		end;
+	else
+		VirtualInputManager:SendKeyEvent(down, key, false, game);
+	end;
+end;
 
 function KeyLibrary:TapKey(key)
 	key = key:upper();
 
 	if key == "MOUSEBUTTON1" or key == "M1" then
-		VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0);
+		SimulateKey("M1", true);
 		RenderStepped:Wait(); -- wait for 1 frame to render or soemthin so it actually registers the key tap
-		VirtualInputManager:SendMouseButtonEvent(0, 0, 0, false, game, 0);
+		SimulateKey("M1", false);
 	else
-		local Key = Enum.KeyCode[key];
+		local Key = KeyCode[key];
 
 		if Key then
-			keypress(Key);
-			keyrelease(Key);
+			SimulateKey(Key, true);
+			SimulateKey(Key, false);
 		end;
 	end;
 end;
 
-function KeyLibrary:HoldKey(key) -- mess
+function KeyLibrary:HoldKey(key)
 	key = key:upper();
 
 	if key == "MOUSEBUTTON1" or key == "M1" then
-		VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0);
+		SimulateKey("M1", true);
 	else
-		local Key = Enum.KeyCode[key];
+		local Key = KeyCode[key];
 
 		if Key then
-			keypress(Key);
+			SimulateKey(Key, true);
 		end;
 	end;
 end;
@@ -43,23 +67,19 @@ function KeyLibrary:ReleaseKey(key)
 	key = key:upper();
 
 	if key == "MOUSEBUTTON1" or key == "M1" then
-		VirtualInputManager:SendMouseButtonEvent(0, 0, 0, false, game, 0);
+		SimulateKey("M1", false);
 	else
-		local Key = Enum.KeyCode[key];
+		local Key = KeyCode[key];
 
 		if Key then
-			keyrelease(Key);
+			SimulateKey(Key, false);
 		end;
 	end;
 end;
 
 
   --[[
-key = keycode[key]
-  if not key then
-  send(e)
-else
-  sendmouse()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Asgerpasker/Public/main/SimulateKeys.lua"))();
   --]]
 
 -- HoldKey, ReleaseKey
