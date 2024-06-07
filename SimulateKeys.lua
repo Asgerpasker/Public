@@ -77,6 +77,12 @@ function KeyLibrary:ReleaseKey(key)
 	end;
 end;
 
+--[[
+local key = keycode(key)
+key = key or "m1"
+
+simulatekey(key, down)
+--]]
 
   --[[
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Asgerpasker/Public/main/SimulateKeys.lua"))();
