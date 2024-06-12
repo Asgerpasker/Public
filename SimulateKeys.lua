@@ -40,12 +40,8 @@ function KeyLibrary:TapKey(key)
 		RenderStepped:Wait(); -- wait for 1 frame to render or soemthin so it actually registers the key tap
 		SimulateKey("M1", false);
 	else
-		local Key = KeyCode[key];
-
-		if Key then
-			SimulateKey(Key, true);
-			SimulateKey(Key, false);
-		end;
+		SimulateKey(Key, true);
+		SimulateKey(Key, false);
 	end;
 end;
 
@@ -55,9 +51,7 @@ function KeyLibrary:HoldKey(key)
 	if key == "MOUSEBUTTON1" or key == "M1" then
 		SimulateKey("M1", true);
 	else
-		if Key then
-			SimulateKey(key, true);
-		end;
+		SimulateKey(key, true);
 	end;
 end;
 
@@ -67,9 +61,7 @@ function KeyLibrary:ReleaseKey(key)
 	if key == "MOUSEBUTTON1" or key == "M1" then
 		SimulateKey("M1", false);
 	else
-		if Key then
-			SimulateKey(key, false);
-		end;
+		SimulateKey(key, false);
 	end;
 end;
 
