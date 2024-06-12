@@ -55,10 +55,8 @@ function KeyLibrary:HoldKey(key)
 	if key == "MOUSEBUTTON1" or key == "M1" then
 		SimulateKey("M1", true);
 	else
-		local Key = KeyCode[key];
-
 		if Key then
-			SimulateKey(Key, true);
+			SimulateKey(key, true);
 		end;
 	end;
 end;
@@ -69,10 +67,8 @@ function KeyLibrary:ReleaseKey(key)
 	if key == "MOUSEBUTTON1" or key == "M1" then
 		SimulateKey("M1", false);
 	else
-		local Key = KeyCode[key];
-
 		if Key then
-			SimulateKey(Key, false);
+			SimulateKey(key, false);
 		end;
 	end;
 end;
