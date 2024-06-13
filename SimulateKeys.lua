@@ -33,11 +33,9 @@ function SimulateKey(key, down) -- no add to keylibrary table since this functio
 end;
 
 function KeyLibrary:TapKey(key, delay)
-	if key == "M1" then
-		SimulateKey("M1", true);
-		task.wait(delay); -- wait for 1 frame to render or soemthin so it actually registers the key tap
-		SimulateKey("M1", false);
-	end;
+	SimulateKey(key, true);
+	task.wait(delay); -- wait for 1 frame to render or soemthin so it actually registers the key tap
+	SimulateKey(key, false);
 end;
 
 function KeyLibrary:HoldKey(key)
