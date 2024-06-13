@@ -39,6 +39,8 @@ function KeyLibrary:TapKey(key)
 		SimulateKey("M1", false);
 	else
 		SimulateKey(key, true);
+				RenderStepped:Wait(); -- wait for 1 frame to render or soemthin so it actually registers the key tap
+
 		SimulateKey(key, false);
 	end;
 end;
