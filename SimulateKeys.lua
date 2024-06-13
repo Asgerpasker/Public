@@ -40,8 +40,8 @@ function KeyLibrary:TapKey(key)
 		RenderStepped:Wait(); -- wait for 1 frame to render or soemthin so it actually registers the key tap
 		SimulateKey("M1", false);
 	else
-		SimulateKey(Key, true);
-		SimulateKey(Key, false);
+		SimulateKey(key, true);
+		SimulateKey(key, false);
 	end;
 end;
 
