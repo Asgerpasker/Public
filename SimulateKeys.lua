@@ -16,10 +16,9 @@ local KeyLibrary = {
 };
 
 function SimulateKey(key, down) -- no add to keylibrary table since this function wasn't made for mongos to use
-	key = key:upper();
 	key = KeyCode[key] or key;
 
-	if key == "MOUSEBUTTON1" or key == "M1" then
+	if key == "M1" then
 		VirtualInputManager:SendMouseButtonEvent(0, 0, 0, down, game, 0);
 
 	elseif HasKeyFunctions then
@@ -36,7 +35,7 @@ end;
 function KeyLibrary:TapKey(key)
 	key = key:upper();
 
-	if key == "MOUSEBUTTON1" or key == "M1" then
+	if key == "M1" then
 		SimulateKey("M1", true);
 		RenderStepped:Wait(); -- wait for 1 frame to render or soemthin so it actually registers the key tap
 		SimulateKey("M1", false);
@@ -49,7 +48,7 @@ end;
 function KeyLibrary:HoldKey(key)
 	key = key:upper();
 
-	if key == "MOUSEBUTTON1" or key == "M1" then
+	if key == "M1" then
 		SimulateKey("M1", true);
 	else
 		SimulateKey(key, true);
