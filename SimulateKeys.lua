@@ -17,6 +17,7 @@ local KeyLibrary = {
 
 function SimulateKey(key, down) -- no add to keylibrary table since this function wasn't made for mongos to use
 	key = key:upper();
+	key = KeyCode[key] or key;
 
 	if key == "MOUSEBUTTON1" or key == "M1" then
 		VirtualInputManager:SendMouseButtonEvent(0, 0, 0, down, game, 0);
