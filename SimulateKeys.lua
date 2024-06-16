@@ -20,7 +20,7 @@ function SimulateKey(key, down) -- no add to keylibrary table since this functio
 
 	if key == "M1" then
 		VirtualInputManager:SendMouseButtonEvent(0, 0, 0, down, game, 0);
-
+		print "m1";
 	elseif HasKeyFunctions then
 		if down then
 			keypress(key);
@@ -34,7 +34,8 @@ end;
 
 function KeyLibrary:TapKey(key, delay)
 	SimulateKey(key, true);
-	task.wait(delay); -- wait for 1 frame to render or soemthin so it actually registers the key tap
+	task.wait(delay);
+	RenderStepped:Wait(); -- wait for 1 frame to render or soemthin so it actually registers the key tap
 	SimulateKey(key, false);
 end;
 
