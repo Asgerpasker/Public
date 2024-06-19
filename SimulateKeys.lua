@@ -12,7 +12,6 @@ local HasKeyFunctions = typeof(keypress) == "function" and typeof(keyrelease) ==
 local KeyLibrary = {
 	_AUTHOR = "Asgerpasker",
 	_BESTTC2HACK = "ethereon.xyz",
-	_LASTUPDATED = "6/7/2024", -- MM/DD/YYYY
 };
 
 function SimulateKey(key, down) -- no add to keylibrary table since this function wasn't made for mongos to use
