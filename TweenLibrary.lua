@@ -4,8 +4,14 @@ local White = Color3.fromRGB(255, 255, 255); -- Just in case, white should stay 
 
 local RunService = game:GetService("RunService");
 local CLAMP, INSERT, REMOVE, CLEAR = math.clamp, table.insert, table.remove, table.clear;
-local SPAWN, DummyFunc = task.spawn, function() end;
+local DummyFunc = function() end; -- Lazy way
 local CurrentTweens = {}; -- table.create(10)
+
+function SPAWN(func, ...)
+    if func ~= DummyFunc then
+        return task.spawn(func, ...);
+    end;
+end;
 
 SPAWN(function()
     while RunService.Heartbeat:Wait() do -- inf loop
@@ -14,15 +20,12 @@ SPAWN(function()
         for i,v in pairs(CurrentTweens) do
             local Elapsed = CurrentTime - v.StartTime;
             v.CurrentValue = v.StartValue + (v.EndValue - v.StartValue) * CLAMP(Elapsed / v.Duration, 0, 1); -- v.StartValue * CLAMP(Elapsed / v.Duration, 0, 1)
+            SPAWN(v.OnChange, v.CurrentValue);
 
-            SPAWN(function() -- eh
-                v.OnChange(v.CurrentValue);
-            end);
-        
             if v.CurrentValue == v.EndValue then
                 CLEAR(i); -- this might be retarded but i aint sure how good gc is for tablz
                 REMOVE(CurrentTweens, i);
-                v.OnEnd();
+                SPAWN(v.OnEnd);
             end;
         end;
     end;
