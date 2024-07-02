@@ -9,7 +9,7 @@ local CurrentTweens = {}; -- table.create(10)
 
 function SPAWN(func, ...)
     if func ~= DummyFunc then
-        return task.spawn(func, ...);
+        task.spawn(func, ...);
     end;
 end;
 
