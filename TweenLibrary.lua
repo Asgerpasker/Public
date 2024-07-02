@@ -23,7 +23,7 @@ SPAWN(function()
             SPAWN(v.OnChange, v.CurrentValue);
 
             if v.CurrentValue == v.EndValue then
-                CLEAR(i); -- this might be retarded but i aint sure how good gc is for tablz
+                CLEAR(v); -- this might be retarded but i aint sure how good gc is for tablz
                 REMOVE(CurrentTweens, i);
                 SPAWN(v.OnEnd);
             end;
