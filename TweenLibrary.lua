@@ -1,6 +1,7 @@
 -- Add tween methods later
 
-local White = Color3.fromRGB(255, 255, 255); -- Just in case, white should stay white
+-- Just in case white should stay white
+local White = Color3.fromRGB(255, 255, 255);
 
 local RunService = game:GetService("RunService");
 local CLAMP, INSERT, REMOVE, CLEAR = math.clamp, table.insert, table.remove, table.clear;
@@ -19,13 +20,13 @@ SPAWN(function()
 
         for i,v in pairs(CurrentTweens) do
             local Elapsed = CurrentTime - v.StartTime;
-            v.CurrentValue = v.StartValue + (v.EndValue - v.StartValue) * CLAMP(Elapsed / v.Duration, 0, 1); -- v.StartValue * CLAMP(Elapsed / v.Duration, 0, 1)
+            v.CurrentValue = v.StartValue + (v.EndValue - v.StartValue) * CLAMP(Elapsed / v.Duration, 0, 1);
             SPAWN(v.OnChange, v.CurrentValue);
 
             if v.CurrentValue == v.EndValue then
-                CLEAR(v); -- this might be retarded but i aint sure how good gc is for tablz
-                REMOVE(CurrentTweens, i);
                 SPAWN(v.OnEnd);
+                CLEAR(v); -- this might be retarded but i aint sure how good gc is for cleang up tableswe
+                REMOVE(CurrentTweens, i);
             end;
         end;
     end;
