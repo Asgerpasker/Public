@@ -1,17 +1,14 @@
 -- Add tween methods later
 
-local White = Color3.fromRGB(255, 255, 255); -- just so white stays white
+local White = Color3.fromRGB(255, 255, 255); -- Just in case, white should stay white
 
 local RunService = game:GetService("RunService");
-local CLAMP, INSERT, REMOVE = math.clamp, table.insert, table.remove;
+local CLAMP, INSERT, REMOVE, CLEAR = math.clamp, table.insert, table.remove, table.clear;
 local SPAWN, DummyFunc = task.spawn, function() end;
 local CurrentTweens = {}; -- table.create(10)
 
 SPAWN(function()
     while RunService.Heartbeat:Wait() do -- inf loop
-        if #CurrentTweens == 0 then
-            continue;
-        end;
         local CurrentTime = tick();
 
         for i,v in pairs(CurrentTweens) do
@@ -23,6 +20,7 @@ SPAWN(function()
             end);
         
             if v.CurrentValue == v.EndValue then
+                CLEAR(i); -- this might be retarded but i aint sure how good gc is for tablz
                 REMOVE(CurrentTweens, i);
                 v.OnEnd();
             end;
