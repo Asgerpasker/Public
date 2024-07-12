@@ -1,9 +1,6 @@
 --[[
 	Simple library to simulate the pressing of keys in Roblox
-	Specifically made for Solara, and other level 3 executors, due to their lack of proper UNC
 	Only supports left mouse button
-
-	---------> ethereon.xyz <---------
 ]]
 
 local VirtualInputManager = game:GetService("VirtualInputManager");
@@ -11,7 +8,6 @@ local RenderStepped, KeyCode = game:GetService("RunService").RenderStepped, Enum
 local HasKeyFunctions = typeof(keypress) == "function" and typeof(keyrelease) == "function";
 local KeyLibrary = {
 	_AUTHOR = "Asgerpasker",
-	_BESTTC2HACK = "ethereon.xyz",
 };
 
 function SimulateKey(key, down) -- no add to keylibrary table since this function wasn't made for mongos to use
