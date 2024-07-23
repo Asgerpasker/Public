@@ -4,28 +4,28 @@
 local White = Color3.fromRGB(255, 255, 255);
 
 local RunService = game:GetService("RunService");
-local CLAMP, INSERT, REMOVE, CLEAR = math.clamp, table.insert, table.remove, table.clear;
-local DummyFunc = function() end; -- Lazy way
-local CurrentTweens = {}; -- table.create(10)
+local CLAMP, MIN = math.clamp, math.min;
+local INSERT, REMOVE, CLEAR = table.insert, table.remove, table.clear;
+local CurrentTweens, DummyFunc = {}, function() end;
 
 function SPAWN(func, ...)
-    if func ~= DummyFunc then
+    if func ~= DummyFunc then -- anti gas leak
         task.spawn(func, ...);
     end;
 end;
 
 SPAWN(function()
-    while RunService.Heartbeat:Wait() do -- inf loop
+    while RunService.RenderStepped:Wait() do -- fuck it as soon as it renders
         local CurrentTime = tick();
 
-        for i,v in pairs(CurrentTweens) do
+        for i,v in next, CurrentTweens do
             local Elapsed = CurrentTime - v.StartTime;
-            v.CurrentValue = v.StartValue + (v.EndValue - v.StartValue) * CLAMP(Elapsed / v.Duration, 0, 1);
+            v.CurrentValue = v.StartValue + (v.EndValue - v.StartValue) * MIN(Elapsed / v.Duration, 1); --CLAMP(Elapsed / v.Duration, 0, 1);
             SPAWN(v.OnChange, v.CurrentValue);
 
             if v.CurrentValue == v.EndValue then
                 SPAWN(v.OnEnd);
-                CLEAR(v); -- this might be retarded but i aint sure how good gc is for cleang up tableswe
+                CLEAR(v); -- this might be retarded but i aint sure how good gc is for cleang up tableswe (i aint reading the manual)
                 REMOVE(CurrentTweens, i);
             end;
         end;
@@ -41,7 +41,7 @@ function Tween(info)
         OnEnd = info.OnEnd or DummyFunc,
 
         StartValue = info.StartValue or 0,
-        CurrentValue = info.StartValue or 0,
+        CurrentValue = info.StartValue or 0, -- maybe dont store in future
         EndValue = info.EndValue or 1,
     });
 end;
