@@ -1,4 +1,5 @@
 -- Add tween methods later
+-- OnEnd => OnFinished
 
 -- Just in case white should stay white
 local White = Color3.fromRGB(255, 255, 255);
