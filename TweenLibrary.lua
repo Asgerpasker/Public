@@ -1,57 +1,61 @@
--- Add tween methods later
--- OnEnd => OnFinished
+-- Add tween methods later (no?)
+-- micro optimz
 
 -- Just in case white should stay white
-local White = Color3.fromRGB(255, 255, 255);
+local White = Color3.new(1, 1, 1);
 
 local RunService = game:GetService("RunService");
 local CLAMP, MIN = math.clamp, math.min;
 local INSERT, REMOVE, CLEAR = table.insert, table.remove, table.clear;
 local CurrentTweens, DummyFunc = {}, function() end;
+local SPWN = task.spawn; -- cache it cuz
 
 function SPAWN(func, ...)
-    if func ~= DummyFunc then -- anti gas leak
-        task.spawn(func, ...);
-    end;
+	if func ~= DummyFunc then -- No need to create another thread if its notingz
+		SPWN(func, ...);
+	end;
 end;
 
 SPAWN(function()
-    while RunService.RenderStepped:Wait() do -- fuck it as soon as it renders
-        local CurrentTime = tick();
+	while RunService.RenderStepped:Wait() do
+		local CurrentTime = tick();
 
-        for i,v in next, CurrentTweens do
-            local Elapsed = CurrentTime - v.StartTime;
-            v.CurrentValue = v.StartValue + (v.EndValue - v.StartValue) * MIN(Elapsed / v.Duration, 1); --CLAMP(Elapsed / v.Duration, 0, 1);
-            SPAWN(v.OnChange, v.CurrentValue);
+		for i,v in next, CurrentTweens do
+			local Multiplier = MIN(CurrentTime - v.StartTime / v.Duration, 1);
+			SPAWN(v.OnChanged, v.BaseValue * Multiplier);
 
-            if v.CurrentValue == v.EndValue then
-                SPAWN(v.OnEnd);
-                CLEAR(v); -- this might be retarded but i aint sure how good gc is for cleang up tableswe (i aint reading the manual)
-                REMOVE(CurrentTweens, i);
-            end;
-        end;
-    end;
+			if Multiplier == 1 then
+				SPAWN(v.OnFinished);
+				CLEAR(v); -- This might be retarded but i aint sure how good the gc is for cleang up unused tables (i aint reading the manual)
+				REMOVE(CurrentTweens, i);
+			end;
+		end;
+	end;
 end);
 
 function Tween(info)
-    INSERT(CurrentTweens, {
-        StartTime = tick(),
-        Duration = info.Duration or 1,
+	INSERT(CurrentTweens, {
+		StartTime = tick(),
+		Duration = info.Duration,
+		BaseValue = info.StartValue + (info.EndValue - info.StartValue),
 
-        OnChange = info.OnChange or DummyFunc,
-        OnEnd = info.OnEnd or DummyFunc,
-
-        StartValue = info.StartValue or 0,
-        CurrentValue = info.StartValue or 0, -- maybe dont store in future
-        EndValue = info.EndValue or 1,
-    });
+		OnChanged = info.OnChanged or DummyFunc,
+		OnFinished = info.OnFinished or DummyFunc,
+	});
 end;
 
-if typeof(getgenv) == "function" and typeof(getgenv()) == "table" then
-    getgenv().Tween = Tween;
-end;
+Tween({
+	Duration = 1,
+	StartValue = 0,
+	EndValue = 1,
+	
+	OnChanged = function(value)
+		game.Players.LocalPlayer.Character.UpperTorso.Transparency = value;
+	end,
+});
 
-return Tween; -- Doesn't really matter, since it's getting added to the global env anyway (getgenv)
+(getgenv and getgenv() or _G).Tween = Tween;
+return Tween; -- Doesn't really matter, since it should be added to the global env anyway
 
 --[[
 -- Example
