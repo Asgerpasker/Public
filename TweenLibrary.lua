@@ -16,35 +16,34 @@ function SPAWN(func, ...)
 	end;
 end;
 
-function Tween(info)
-    INSERT(CurrentTweens, {
-        StartTime = tick(),
-        Duration = info.Duration,
-        BaseValue = info.StartValue, 
-        Delta = info.EndValue - info.StartValue,  
+SPWN(function()
+	while RunService.RenderStepped:Wait() do
+		local CurrentTime = tick();
 
-        OnChanged = info.OnChanged or DummyFunc,
-        OnFinished = info.OnFinished or DummyFunc,
-    });
-end;
+		for i,v in next, CurrentTweens do
+			local Multiplier = MIN((CurrentTime - v.StartTime) / v.Duration, 1);
+			SPAWN(v.OnChanged, v.StartValue + v.Delta * Multiplier);
 
-SPAWN(function()
-    while RunService.RenderStepped:Wait() do
-        local CurrentTime = tick();
-
-        for i, v in next, CurrentTweens do
-            local Multiplier = CLAMP((CurrentTime - v.StartTime) / v.Duration, 0, 1);
-            local CurrentValue = v.BaseValue + v.Delta * Multiplier;  
-
-            SPAWN(v.OnChanged, CurrentValue); 
-
-            if Multiplier == 1 then
-                SPAWN(v.OnFinished);
-                REMOVE(CurrentTweens, i); 
-            end;
-        end;
-    end;
+			if Multiplier == 1 then	
+				SPAWN(v.OnFinished);
+				CLEAR(v); -- This might be retarded but i aint sure how good the gc is for cleang up unused tables (i aint reading the manual)
+				REMOVE(CurrentTweens, i);
+			end;
+		end;
+	end;
 end);
+
+function Tween(info)
+	INSERT(CurrentTweens, {
+		StartTime = tick(),
+		Duration = info.Duration,
+		StartValue = info.StartValue,
+		Delta = info.EndValue - info.StartValue,
+
+		OnChanged = info.OnChanged or DummyFunc,
+		OnFinished = info.OnFinished or DummyFunc,
+	});
+end;
 
 
 (getgenv and getgenv() or _G).Tween = Tween;
