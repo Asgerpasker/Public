@@ -44,6 +44,13 @@ function Tween(info)
 	});
 end;
 
+(getgenv and getgenv() or _G).Tween = Tween;
+return Tween; -- Doesn't really matter, since it should be added to the global env anyway
+
+--[[
+-- Example
+
+local Tween = loadstring(game:HttpGet("https://raw.githubusercontent.com/Asgerpasker/Public/main/TweenLibrary.lua"))(); -- looks nicer
 Tween({
 	Duration = 1,
 	StartValue = 0,
@@ -52,29 +59,5 @@ Tween({
 	OnChanged = function(value)
 		game.Players.LocalPlayer.Character.UpperTorso.Transparency = value;
 	end,
-});
-
-(getgenv and getgenv() or _G).Tween = Tween;
-return Tween; -- Doesn't really matter, since it should be added to the global env anyway
-
---[[
--- Example
-
-local Tween = loadstring(game:HttpGet("https://raw.githubusercontent.com/Asgerpasker/Public/main/TweenLibrary.lua"))(); -- looks nicer
-local Baseplate = game.Workspace.Baseplate;
-
-Tween({
-    Duration = 5,
-    StartValue = 0,
-    EndValue = 100,
-
-    OnChange = function(value)
-        Baseplate.Transparency = value / 100;
-    end,
-
-    OnEnd = function()
-        wait(1);
-        Baseplate.Transparency = 0;
-    end,
 });
 --]]
