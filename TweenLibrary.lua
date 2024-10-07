@@ -24,7 +24,7 @@ RunService:BindToRenderStep("__TweenLoopLinear", 199, function()
 		SPAWN(v.OnChanged, v.StartValue + v.Delta * Multiplier);
 
 		if Multiplier == 1 then	
-			SPAWN(v.OnFinished);
+			SPAWN(v.OnFinished, v.StartValue + v.Delta * Multiplier); -- caus
 			CLEAR(v); -- This might be retarded but i aint sure how good the gc is for cleang up unused tables (i aint reading the manual)
 			REMOVE(CurrentTweens, i);
 		end;
