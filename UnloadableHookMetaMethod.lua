@@ -1,8 +1,8 @@
 if not hookmetamethod then
   return print "shitsploit get money brokie";
 end;
-local isreadonly, setreadonly, getrawmt = isreadonly, setreadonly, getrawmetatable;
-local INSERT, CLEAR = table.insert, table.clear;
+local isreadonly, setreadonly, getrawmt, OldHookmetamethod = isreadonly, setreadonly, getrawmetatable, hookmetamethod;
+local INSERT, CLEAR, SUB = table.insert, table.clear, string.sub;
 
 local HookedMetaMethods;
 HookedMetaMethods = {
@@ -32,6 +32,11 @@ HookedMetaMethods = {
 getgenv().HookedMetaMethods = HookedMetaMethods;
 
 getgenv().hookmetamethod = function(inst, method, hook)
+    if SUB(method) == "__" then
+      warn("Using old hookmetamethod due to method containg __ in start, method: "..method..", inst / object: "..inst);
+      return OldHookmetamethod(inst, method, hook);
+  end;
+  
     local RawMetatable, Method = getrawmt(inst), "__"..method;
     local OldMethod, ReadOnly = RawMetatable[Method], isreadonly(RawMetatable);
     setreadonly(RawMetatable, false);
