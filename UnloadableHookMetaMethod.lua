@@ -9,18 +9,16 @@ local INSERT, CLEAR, REMOVE, SUB = table.insert, table.clear, table.remove, stri
 local HookedMetaMethods;
 HookedMetaMethods = {
 	Revert = function(tbl)
-		for i,v in next, tbl do
-		end;
 		tbl.RawMetatable[tbl.Method] = tbl.OldMethod;
-		setreadonly(tbl.RawMetatable, tbl.ReadOnly);
 		CLEAR(tbl);
 	end,
 
 	Unload = function(oldmethod)
 		if oldmethod then
-			for i,v in next, HookedMetaMethods do
+			for i,v in next, HookedMetaMethods do	
 				if v.OldMethod == oldmethod then
 					HookedMetaMethods.Revert(v);
+					REMOVE(HookedMetaMethods, i);
 					return; -- exit loop and func
 				end;
 			end;
@@ -44,7 +42,7 @@ getgenv().hookmetamethod = function(inst, method, hook)
 	end;
 
 	local RawMetatable, Method = getrawmt(inst), "__"..method;
-	local OldMethod, ReadOnly = RawMetatable[Method], isreadonly(RawMetatable);
+	local OldMethod = RawMetatable[Method];
 	setreadonly(RawMetatable, false);
 
 	INSERT(HookedMetaMethods,  {
