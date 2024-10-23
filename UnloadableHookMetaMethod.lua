@@ -34,7 +34,7 @@ HookedMetaMethods = {
 getgenv().HookedMetaMethods = HookedMetaMethods;
 
 getgenv().hookmetamethod = function(inst, method, hook)
-    if SUB(method) == "__" then
+    if SUB(method, 1, 2) == "__" then
       warn("Using old hookmetamethod due to method containg __ in start, method: "..method..", inst / object: "..inst);
       return OldHookmetamethod(inst, method, hook);
   end;
