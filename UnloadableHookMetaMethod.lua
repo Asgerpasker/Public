@@ -1,5 +1,7 @@
 if not hookmetamethod then
-  return print "shitsploit get money brokie";
+  return warn "shitsploit get money brokie";
+elseif HookedMetaMethods then
+  return;
 end;
 local isreadonly, setreadonly, getrawmt, OldHookmetamethod = isreadonly, setreadonly, getrawmetatable, hookmetamethod;
 local INSERT, CLEAR, SUB = table.insert, table.clear, string.sub;
