@@ -3,7 +3,7 @@ if not hookmetamethod then
 elseif HookedMetaMethods then
 	return;
 end;
-local isreadonly, setreadonly, getrawmt, OldHookmetamethod = isreadonly, setreadonly, getrawmetatable, hookmetamethod;
+local isreadonly, setreadonly, getrawmt = isreadonly, setreadonly, getrawmetatable;
 local INSERT, CLEAR, REMOVE, SUB = table.insert, table.clear, table.remove, string.sub;
 
 local HookedMetaMethods;
@@ -34,11 +34,12 @@ HookedMetaMethods = {
 };
 
 getgenv().HookedMetaMethods = HookedMetaMethods;
+getgenv().Ohookmetamethod = hookmetamethod;
 
 getgenv().hookmetamethod = function(inst, method, hook)
 	if SUB(method, 1, 2) == "__" then
 		warn("Using old hookmetamethod due to method containg __ in start, method: "..method..", inst / object: "..inst);
-		return OldHookmetamethod(inst, method, hook);
+		return Ohookmetamethod(inst, method, hook);
 	end;
 
 	local RawMetatable, Method = getrawmt(inst), "__"..method;
