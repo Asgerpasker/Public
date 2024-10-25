@@ -30,16 +30,15 @@ HookedMethods = {
 	end,
 };
 
-
 getgenv().HookedMethods = HookedMethods;
 getgenv().Ohookmetamethod = hookmetamethod;
 
-getgenv().hookmetamethod = function(inst, method, hook)
+getgenv().hookmetamethod = function(object, method, hook)
 	if SUB(method, 1, 2) == "__" then
-		warn("Using old hookmetamethod due to method containg __ in start, method: "..method..", inst / object: "..inst);
-		return Ohookmetamethod(inst, method, hook);
+		warn("Using old hookmetamethod due to method containg __ in start, method: "..method..", inst / object: "..object);
+		return Ohookmetamethod(object, method, hook);
 	end;
-	local RawMetatable, Method = getrawmt(inst), "__"..method;
+	local RawMetatable, Method = getrawmt(object), "__"..method;
 	local OldMethod = RawMetatable[Method];
 	setreadonly(RawMetatable, false);
 
