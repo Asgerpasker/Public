@@ -20,9 +20,9 @@ HookedMethods = {
         end)();
 		
         local Index = FIND(HookedMethods.Hooks, Info);
-        setreadonly(RawMetatable, false);
+        setreadonly(Info.RawMetatable, false);
 		Info.RawMetatable[Info.Method] = Info.OldMethod;
-        setreadonly(RawMetatable, true);
+        setreadonly(Info.RawMetatable, true);
 		CLEAR(Info); REMOVE(HookedMethods.Hooks, Index);
 	end,
 
