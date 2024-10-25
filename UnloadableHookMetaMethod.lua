@@ -1,39 +1,37 @@
 if not hookmetamethod then
 	return warn "shitsploit get money brokie";
-elseif HookedMetaMethods then
-	return;
 end;
-local isreadonly, setreadonly, getrawmt = isreadonly, setreadonly, getrawmetatable;
 local INSERT, CLEAR, REMOVE, SUB = table.insert, table.clear, table.remove, string.sub;
+local isreadonly, setreadonly, getrawmt = isreadonly, setreadonly, getrawmetatable;
+local next, typeof = next, typeof;
 
-local HookedMetaMethods;
-HookedMetaMethods = {
-	Revert = function(tbl)
-		tbl.RawMetatable[tbl.Method] = tbl.OldMethod;
-		CLEAR(tbl);
+local HookedMethods;
+HookedMethods = {
+    Hooks = {},
+
+	Revert = function(info)
+		local Info = typeof(info) == "table" and info or (function()
+			for i,v in next, HookedMethods.Hooks do
+				if v.OldMethod == info then
+					return v;
+				end;
+            end;
+        end)();
+		
+        local Index = FIND(HookedMethods.Hooks, Info);
+		Info.RawMetatable[Info.Method] = Info.OldMethod;
+		CLEAR(Info); REMOVE(HookedMethods.Hooks, Index);
 	end,
 
-	Unload = function(oldmethod)
-		if oldmethod then
-			for i,v in next, HookedMetaMethods do	
-				if v.OldMethod == oldmethod then
-					HookedMetaMethods.Revert(v);
-					REMOVE(HookedMetaMethods, i);
-					return; -- exit loop and func
-				end;
-			end;
-		end;
-
-		for i,v in next, HookedMetaMethods do
-			if typeof(v) == "table" then
-				HookedMetaMethods.Revert(v);
-				REMOVE(HookedMetaMethods, i);
-			end;
+	Unload = function()
+		for i,v in next, HookedMethods.Hooks do
+			HookedMethods.Revert(v);
 		end;
 	end,
 };
 
-getgenv().HookedMetaMethods = HookedMetaMethods;
+
+getgenv().HookedMethods = HookedMethods;
 getgenv().Ohookmetamethod = hookmetamethod;
 
 getgenv().hookmetamethod = function(inst, method, hook)
@@ -41,16 +39,14 @@ getgenv().hookmetamethod = function(inst, method, hook)
 		warn("Using old hookmetamethod due to method containg __ in start, method: "..method..", inst / object: "..inst);
 		return Ohookmetamethod(inst, method, hook);
 	end;
-
 	local RawMetatable, Method = getrawmt(inst), "__"..method;
 	local OldMethod = RawMetatable[Method];
 	setreadonly(RawMetatable, false);
 
-	INSERT(HookedMetaMethods,  {
+	INSERT(HookedMethods.Hooks,  {
 		RawMetatable = RawMetatable,
-		Method = Method,
 		OldMethod = OldMethod,
-		ReadOnly = ReadOnly,
+        Method = Method,
 	});
 
 	RawMetatable[Method] = hook;
