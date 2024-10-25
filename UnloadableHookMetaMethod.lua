@@ -2,7 +2,7 @@
 if not hookmetamethod then
 	return warn "shitsploit get money brokie";
 end;
-local INSERT, CLEAR, REMOVE, SUB = table.insert, table.clear, table.remove, string.sub;
+local INSERT, CLEAR, REMOVE, FIND, SUB = table.insert, table.clear, table.remove, table.find, string.sub;
 local isreadonly, setreadonly, getrawmt = isreadonly, setreadonly, getrawmetatable;
 local next, typeof = next, typeof;
 
