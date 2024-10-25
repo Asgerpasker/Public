@@ -1,3 +1,4 @@
+-- why are indents so fucking ass in github
 if not hookmetamethod then
 	return warn "shitsploit get money brokie";
 end;
@@ -19,7 +20,9 @@ HookedMethods = {
         end)();
 		
         local Index = FIND(HookedMethods.Hooks, Info);
+        setreadonly(RawMetatable, false);
 		Info.RawMetatable[Info.Method] = Info.OldMethod;
+        setreadonly(RawMetatable, true);
 		CLEAR(Info); REMOVE(HookedMethods.Hooks, Index);
 	end,
 
@@ -40,14 +43,14 @@ getgenv().hookmetamethod = function(object, method, hook)
 	end;
 	local RawMetatable, Method = getrawmt(object), "__"..method;
 	local OldMethod = RawMetatable[Method];
-	setreadonly(RawMetatable, false);
-
 	INSERT(HookedMethods.Hooks,  {
 		RawMetatable = RawMetatable,
 		OldMethod = OldMethod,
         Method = Method,
 	});
 
+	setreadonly(RawMetatable, false);
 	RawMetatable[Method] = hook;
+    setreadonly(RawMetatable, true);
 	return OldMethod;
 end;
