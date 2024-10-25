@@ -18,7 +18,7 @@ HookedMethods = {
 				end;
             end;
         end)();
-		
+	print(HookedMethods, HookedMethods.Hooks);
         local Index = FIND(HookedMethods.Hooks, Info);
         setreadonly(Info.RawMetatable, false);
 		Info.RawMetatable[Info.Method] = Info.OldMethod;
