@@ -29,6 +29,7 @@ HookedMethods = {
 		for i,v in next, HookedMethods.Hooks do
 			HookedMethods.Revert(v);
 		end;
+		print "unloadded hooks";
 	end,
 };
 
