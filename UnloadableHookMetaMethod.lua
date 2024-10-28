@@ -54,3 +54,5 @@ getgenv().hookmetamethod = function(object, method, hook)
     setreadonly(RawMetatable, true);
 	return OldMethod;
 end;
+
+return hookmetamethod;
