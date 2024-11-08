@@ -1,56 +1,45 @@
--- it doesnt getbetter than this (i dont wanna make
-local MaxCache = 50;
+local Tweens = table.create(50); -- prob doesn't do shit
+local INSERT, CLEAR, REMOVE = table.insert, table.clear, table.remove;
+local spawn, tick = task.spawn, tick;
+local MIN = math.min;
 
-local TweenService = game:GetService("TweenService");
-local TweenCreate, TWINFO, LINEAR = TweenService.Create, TweenInfo.new, Enum.EasingStyle.Linear;
-local CLEAR, REMOVE, INSERT, INST = table.clear, table.remove, table.insert, Instance.new;
-local PlaceHolder = function()end;
-local wait, next = task.wait, next;
-
-local FolderCache = INST("Folder", game:GetService("CoreGui"));
-FolderCache.Name = "TweensCache";
-
--- Cache for speed
-local Cache = {};
-for i = 1, MaxCache do
-    INSERT(Cache, INST("NumberValue", FolderCache));
+function Tween(info)
+	INSERT(Tweens, {
+		Start = tick(), Time = info.Time,
+		From = info.From, To = info.To,
+		Delta = info.To - info.From,
+		OnChanged = info.OnChanged, OnFinished = info.OnFinished,
+	});
 end;
 
--- Clean up cache just cuz (add simple algo in future to adjust maxsize)
-task.spawn(function()
-    while wait(10) do
-        for i,v in next, Cache do
-            if i > MaxCache then
-                REMOVE(Cache, i);
-                v:Destroy();
-            end;
-        end;
-    end;
+game:GetService("RunService").RenderStepped:Connect(function()
+	local CurrentTick = tick();
+
+	for i,v in Tweens do
+		local Multiplier = MIN((CurrentTick - v.Start) / v.Time, 1);
+		spawn(v.OnChanged, v.From + v.Delta * Multiplier); -- Storing delta prob doesnt do shit? i lied it does
+
+		if Multiplier == 1 then
+			if v.OnFinished then
+				spawn(v.OnFinished);
+			end;
+
+			REMOVE(Tweens, i);
+			CLEAR(v);
+		end;
+	end;
 end);
---
 
-local function Tween(info)
-    local End, OnChanged, OnFinished = info.End or PlaceHolder, info.OnChanged, info.OnFinished or PlaceHolder;
-    if not Cache[1] then
-        INSERT(Cache, INST("NumberValue"));
-    end;
+--[[
+Tween({
+	From = 0,
+	To = 5,
+	Time = 2,
 
-    local Number = Cache[1];
-    Number.Value = info.From;
-    REMOVE(Cache, 1);
-    
-    local Connection;
-    Connection = Number:GetPropertyChangedSignal("Value"):Connect(function()
-        if Number.Value == End then
-            Connection:Disconnect();
-            INSERT(Cache, Number); CLEAR(info);
-            OnFinished(End);
-        else
-            OnChanged(Number.Value);
-        end;
-    end);
+	OnChanged = function(val)
+		print(val);
+	end,
+});
+]]
 
-    TweenCreate(TweenService, Number, TWINFO(info.Duration, LINEAR), {Value = End}):Play();
-end;
-
-return Tween; -- why eevn add to global env if we dont call from there
+return Tween;
