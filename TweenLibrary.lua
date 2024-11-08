@@ -1,3 +1,4 @@
+-- old but gold, fuck tween methods
 local Tweens = table.create(50); -- prob doesn't do shit
 local INSERT, CLEAR, REMOVE = table.insert, table.clear, table.remove;
 local spawn, tick = task.spawn, tick;
