@@ -1,7 +1,7 @@
 local Interval = 1 / 60; -- .016
 
-local Tweens = table.create(500); -- prob doesn't do shit
-local INSERT, CLEAR, REMOVE = table.insert, table.clear, table.remove;
+local Tweens = {}; -- prob doesn't do shit
+local INSERT, REMOVE = table.insert, table.remove;
 local spawn, wait, tick = task.spawn, task.wait, tick;
 local MIN = math.min;
 
@@ -27,7 +27,6 @@ spawn(function()
                 end;
 
                 REMOVE(Tweens, i);
-                CLEAR(v);
             end;
         end;
     end;
