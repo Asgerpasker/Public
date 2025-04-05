@@ -1,9 +1,8 @@
 local Interval = 1 / 60; -- .016
 
 local Tweens = {};
-local INSERT, REMOVE = table.insert, table.remove;
+local INSERT, MIN = table.insert, math.min;
 local spawn, wait, tick = task.spawn, task.wait, tick;
-local MIN = math.min;
 
 local function Tween(info)
 	INSERT(Tweens, {
@@ -37,7 +36,7 @@ end);
 Tween({
 	From = 0,
 	To = 5,
-	Time = 2,
+	Duration = 2,
 
 	OnChanged = function(val)
 		print(val);
