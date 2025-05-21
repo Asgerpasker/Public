@@ -1,4 +1,4 @@
-local Interval = 1 / 60; -- .016
+local Interval = 1 / 60;
 
 local Tweens = {};
 local INSERT, MIN = table.insert, math.min;
@@ -25,23 +25,12 @@ spawn(function()
                     spawn(v.OnFinished);
                 end;
 
-		Tweens[i] = nil; -- REMOVE(Tweens, i);
+		REMOVE(Tweens, i);
             end;
         end;
 
 	wait(Interval);
     end;
 end);
---[[
-Tween({
-	From = 0,
-	To = 5,
-	Duration = 2,
-
-	OnChanged = function(val)
-		print(val);
-	end,
-});
-]]
 
 return Tween;
