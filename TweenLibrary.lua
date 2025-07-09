@@ -11,18 +11,18 @@ local InitTween = function(tween)
     while true do
         local Multiplier = (GetTime() - Start) / Duration;
 
-        if Multiplier > 1 then
+        if Multiplier >= 1 then
             tween.OnFinished();
             break;
         else
             OnChanged(From + Delta * Multiplier);
         end;
 
-        wait(1/60); -- should be optimized to its result by compiler
+        wait(1/60);
     end;
 end;
 
-local Tween = function(tween)
+return function(tween)
     -- basically just a wrapper but it looks nicer
     spawn(InitTween, tween);
 end;
@@ -42,5 +42,3 @@ Tween({
     end;
 });
 ]]
-
-return Tween;
